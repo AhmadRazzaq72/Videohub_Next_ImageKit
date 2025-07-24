@@ -13,8 +13,8 @@ export async function GET(request: NextRequest) {
       );
     }
     await connectToDatabase();
-    const existinguser = await User.findOne({ email });
-    if (!existinguser) {
+    const existingUser = await User.findOne({ email });
+    if (!existingUser) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
