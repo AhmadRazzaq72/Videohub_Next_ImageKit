@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import User from "@/models/User";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
 
@@ -12,10 +12,15 @@ export async function GET(request: NextRequest) {
         { status: 400 }
       );
     }
+
     await connectToDatabase();
+
     const existingUser = await User.findOne({ email });
-    if (!existingUser) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    if (existingUser) {
+      return NextResponse.json(
+        { error: "User already registered" },
+        { status: 400 }
+      );
     }
 
     await User.create({
@@ -24,14 +29,14 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json(
-      { message: "User created successfully" },
-      { status: 201 }
+      { message: "User registered successfully" },
+      { status: 400 }
     );
   } catch (error) {
-    console.error(error);
+    console.error("Registration error", error);
     return NextResponse.json(
-      { error: "Failed to create user" },
-      { status: 500 }
+      { error: "Failed to register user" },
+      { status: 400 }
     );
   }
 }
