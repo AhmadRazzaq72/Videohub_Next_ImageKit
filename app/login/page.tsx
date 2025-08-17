@@ -40,7 +40,7 @@ function LoginPage() {
       toast.error('Invalid email or password');
     } else {
       toast.success('Login successful!');
-      router.push('/dashboard'); // or homepage
+      router.push('/HomePage'); // or homepage
     }
   };
 

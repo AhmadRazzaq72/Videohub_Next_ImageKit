@@ -1,22 +1,57 @@
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-// import { authOptions } from "./api/auth/[...nextauth]/route"; // path relative to /app
+import Image from "next/image";
+import Link from "next/link";
 
-
-export default async function Home() {
-  // const session = await getServerSession(authOptions);
-
-  // if (!session) {
-  //   redirect("/login");
-  // }
-
-  return(
-    <>
-   <div>Welcome !</div>
-  <a href="/api/login" className="text-indigo-600 hover:underline">
+export default function Home() {
+  return (
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-900">
+      {/* Navbar */}
+      <header className="flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-800">
+        <div className="flex items-center gap-2">
+          {/* <Image src="/next.svg" alt="Logo" width={40} height={40} /> */}
+          <span className="font-bold text-xl">VideoHub</span>
+        </div>
+        <nav className="flex gap-6 text-sm font-medium">
+          <Link href="/HomePage" className="hover:text-blue-600 dark:hover:text-blue-400">
+            Browse
+          </Link>
+          <Link href="/upload" className="hover:text-blue-600 dark:hover:text-blue-400">
+            Upload
+          </Link>
+          <Link href="/login" className="hover:text-blue-600 dark:hover:text-blue-400">
             Login
-          </a>
-    </>
-   )
-    ;
+          </Link>
+        </nav>
+      </header>
+
+      {/* Hero Section */}
+      <main className="flex-1 flex flex-col items-center justify-center text-center px-6">
+        <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight mb-6">
+          Share Your <span className="text-blue-600">Videos</span> with the World
+        </h1>
+        <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mb-8">
+          Upload, manage, and explore videos easily with Next.js, MongoDB, and ImageKit.
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Link
+            href="/upload"
+            className="px-6 py-3 rounded-full bg-blue-600 text-white font-medium shadow hover:bg-blue-700 transition"
+          >
+            Upload a Video
+          </Link>
+          <Link
+            href="/HomePage"
+            className="px-6 py-3 rounded-full border border-gray-300 dark:border-gray-700 font-medium hover:bg-gray-200 dark:hover:bg-gray-800 transition"
+          >
+            Browse Videos
+          </Link>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="p-6 text-center text-sm text-gray-500 border-t border-gray-200 dark:border-gray-800">
+        © {new Date().getFullYear()} VideoHub. Built with Next.js & MongoDB. By Ahmad Razzaq
+      </footer>
+    </div>
+  );
 }

@@ -2,13 +2,33 @@
 
 import VideoUploadForm from "../components/VideoUploadForm";
 
-export default function VideoUploadPage() {
+export default function UploadPage() {
+  // This function will receive the form data
+  const handleVideoSubmit = async (data: {
+    title: string;
+    description: string;
+    videoUrl: string;
+  }) => {
+    console.log("Form data received:", data);
+
+    // Example: Send to backend
+    const res = await fetch("/api/video", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    if (!res.ok) {
+      alert("Error saving video");
+    } else {
+      alert("Video saved successfully!");
+    }
+  };
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">Upload New Reel</h1>
-        <VideoUploadForm />
-      </div>
+    <div className="max-w-lg mx-auto mt-8">
+      <h1 className="text-2xl font-bold mb-4">Upload Video</h1>
+      <VideoUploadForm onSubmit={handleVideoSubmit} />
     </div>
   );
 }
