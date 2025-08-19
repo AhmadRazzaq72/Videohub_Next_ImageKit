@@ -18,12 +18,10 @@ export async function connectToDatabase() {
         }
         
     if (!cached.promise) {
-        const opts = {
-            bufferCommands: true,
-            maxPoolSize: 10,
-        } 
-        mongoose.connect(MONGODB_URI, opts).then(() => mongoose.connection)
-    }
+    const opts = { bufferCommands: true, maxPoolSize: 10 }
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then(() => mongoose.connection)
+}
+
     try{
         cached.conn = await cached.promise
 
