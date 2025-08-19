@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
 import { IVideo } from "@/models/Video";
-import { IKVideo } from "imagekitio-next";
 import { useEffect, useRef, useState } from "react";
+import IKVideoWithRef from "./IKVideoWithRef";
 
 interface VideoComponentProps {
   video: IVideo;
@@ -15,30 +15,31 @@ export default function VideoComponent({ video }: VideoComponentProps) {
 
   // Detect if card is visible
   useEffect(() => {
+    const el = videoRef.current;
+    if (!el) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          setIsVisible(entry.isIntersecting);
-        });
+        entries.forEach((entry) => setIsVisible(entry.isIntersecting));
       },
-      { threshold: 0.5 } // play only when 50% visible
+      { threshold: 0.5 }
     );
 
-    if (videoRef.current) observer.observe(videoRef.current);
-
-    return () => {
-      if (videoRef.current) observer.unobserve(videoRef.current);
-    };
+    observer.observe(el);
+    return () => observer.unobserve(el);
   }, []);
 
   // Auto play/pause
   useEffect(() => {
-    if (videoRef.current) {
-      if (isVisible) {
-        videoRef.current.play().catch(() => {});
-      } else {
-        videoRef.current.pause();
-      }
+    const el = videoRef.current;
+    if (!el) return;
+
+    if (isVisible) {
+      el.play().catch(() => {
+        console.warn("Video autoplay blocked by browser");
+      });
+    } else {
+      el.pause();
     }
   }, [isVisible]);
 
@@ -60,8 +61,8 @@ export default function VideoComponent({ video }: VideoComponentProps) {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <IKVideo
-                ref={videoRef as any} // workaround because IKVideo doesn't forward refs
+              <IKVideoWithRef
+                ref={videoRef}
                 path={video.videoUrl}
                 urlEndpoint={process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!}
                 transformation={[{ height: "1920", width: "1080" }]}

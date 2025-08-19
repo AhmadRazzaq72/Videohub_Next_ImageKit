@@ -75,9 +75,11 @@ const VideoUploadForm = ({ onSubmit }: VideoFormProps) => {
           </label>
           <FileUpload
             fileType="video"
-            onSuccess={(res: any) => {
-              setVideoUrl(res.url);
-            }}
+            onSuccess={(res: unknown) => {
+  if (res && typeof res === "object" && "url" in res) {
+    setVideoUrl((res as { url: string }).url);
+  }
+}}
             onProgress={(p) => setProgress(p)}
           />
           {progress > 0 && progress < 100 && (

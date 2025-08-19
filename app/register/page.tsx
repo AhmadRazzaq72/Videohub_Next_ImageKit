@@ -33,8 +33,10 @@ function RegisterPage() {
 
       toast.success("Account created! Please sign in.");
       router.push("/login");
-    } catch (err: any) {
-      toast.error(err.message || "Something went wrong");
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+
+      toast.error(err.message || "Something went wrong");}
     } finally {
       setLoading(false);
     }
