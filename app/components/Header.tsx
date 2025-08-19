@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { Home, User } from "lucide-react";
+import { User, LogOut } from "lucide-react";
 import { useNotification } from "./Notification";
 
 export default function Header() {
@@ -19,83 +19,77 @@ export default function Header() {
   };
 
   return (
-    <div className="navbar bg-base-300 sticky top-0 z-40">
-      <div className="container mx-auto">
-        <div className="flex-1 px-2 lg:flex-none">
+    <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
+      <div className="container mx-auto flex justify-between items-center px-6 py-3">
+        {/* Logo */}
+        <Link
+          href="/"
+          className="text-2xl font-bold text-blue-600 dark:text-blue-400 hover:opacity-80 transition"
+          prefetch={true}
+          onClick={() => showNotification("Welcome to VideoHub", "info")}
+        >
+          VideoHub
+        </Link>
+
+        {/* Navigation */}
+        <nav className="flex items-center gap-6 text-sm font-medium">
           <Link
-            href="/"
-            className="btn btn-ghost text-xl gap-2 normal-case font-bold"
-            prefetch={true}
-            onClick={() =>
-              showNotification("Welcome to ImageKit ReelsPro", "info")
-            }
+            href="/HomePage"
+            className="hover:text-blue-600 dark:hover:text-blue-400 transition"
           >
-            <Home className="w-5 h-5" />
-            Video with AI
+            Browse
           </Link>
-        </div>
-        <div className="flex flex-1 justify-end px-2">
-          <div className="flex items-stretch gap-2">
-            <div className="dropdown dropdown-end">
-              <div
-                tabIndex={0}
-                role="button"
-                className="btn btn-ghost btn-circle"
-              >
-                <User className="w-5 h-5" />
-              </div>
-              <ul
-                tabIndex={0}
-                className="dropdown-content z-[1] shadow-lg bg-base-100 rounded-box w-64 mt-4 py-2"
-              >
-                {session ? (
-                  <>
-                    <li className="px-4 py-1">
-                      <span className="text-sm opacity-70">
-                        {session.user?.email?.split("@")[0]}
-                      </span>
-                    </li>
-                    <div className="divider my-1"></div>
 
-                    <li>
-                      <Link
-                        href="/upload"
-                        className="px-4 py-2 hover:bg-base-200 block w-full"
-                        onClick={() =>
-                          showNotification("Welcome to Admin Dashboard", "info")
-                        }
-                      >
-                        Video Upload
-                      </Link>
-                    </li>
+          {session && (
+            <Link
+              href="/upload"
+              className="hover:text-blue-600 dark:hover:text-blue-400 transition"
+              onClick={() =>
+                showNotification("Ready to upload your video!", "info")
+              }
+            >
+              Upload
+            </Link>
+          )}
 
-                    <li>
-                      <button
-                        onClick={handleSignOut}
-                        className="px-4 py-2 text-error hover:bg-base-200 w-full text-left"
-                      >
-                        Sign Out
-                      </button>
-                    </li>
-                  </>
-                ) : (
+          {!session ? (
+            <Link
+              href="/login"
+              className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition"
+              onClick={() =>
+                showNotification("Please sign in to continue", "info")
+              }
+            >
+              Login
+            </Link>
+          ) : (
+            <div className="relative group">
+              {/* User Button */}
+              <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                <User className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                <span className="hidden sm:block text-sm text-gray-700 dark:text-gray-300">
+                  {session.user?.email?.split("@")[0]}
+                </span>
+              </button>
+
+              {/* Dropdown */}
+              <div className="absolute right-0 mt-2 w-48 rounded-lg shadow-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition">
+                <ul className="py-2 text-sm">
                   <li>
-                    <Link
-                      href="/login"
-                      className="px-4 py-2 hover:bg-base-200 block w-full"
-                      onClick={() =>
-                        showNotification("Please sign in to continue", "info")
-                      }
+                    <button
+                      onClick={handleSignOut}
+                      className="flex items-center gap-2 w-full px-4 py-2 text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
                     >
-                      Login
-                    </Link>
+                      <LogOut className="w-4 h-4" />
+                      Sign Out
+                    </button>
                   </li>
-                )}
-              </ul>
+                </ul>
+              </div>
             </div>
-          </div>
-        </div>
+          )}
+        </nav>
       </div>
-    </div>
+    </header>
   );
 }

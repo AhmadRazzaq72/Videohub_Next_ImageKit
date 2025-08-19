@@ -1,5 +1,6 @@
 "use client";
 
+import toast from "react-hot-toast";
 import VideoUploadForm from "../components/VideoUploadForm";
 
 export default function UploadPage() {
@@ -19,15 +20,14 @@ export default function UploadPage() {
     });
 
     if (!res.ok) {
-      alert("Error saving video");
+      toast.error("Error saving video");
     } else {
-      alert("Video saved successfully!");
+      toast.success('Video Save Successfully');
     }
   };
 
   return (
     <div className="max-w-lg mx-auto mt-8">
-      <h1 className="text-2xl font-bold mb-4">Upload Video</h1>
       <VideoUploadForm onSubmit={handleVideoSubmit} />
     </div>
   );
